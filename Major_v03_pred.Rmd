@@ -1,0 +1,123 @@
+
+```{r}
+#install.packages("forecast")
+#install.packages("plotly")
+#install.packages("tidyr")
+#install.packages("dplyr")
+```
+
+```{r}
+library(forecast)
+```
+
+
+
+```{r}
+data(EuStockMarkets)
+summary(EuStockMarkets)
+```
+```{r}
+class(EuStockMarkets)
+
+```
+
+```{r}
+par(mfrow=c(4,1))
+
+x <- seq_len(nrow(EuStockMarkets))
+for (i in seq_len(ncol(EuStockMarkets))) {
+    y <- EuStockMarkets[,i]
+    heading <- colnames(EuStockMarkets)[i]
+    plot(x, y, type="n", main = heading, xaxt = "n")
+    lines(x, EuStockMarkets[,i])
+    years <- as.integer(time(EuStockMarkets))
+    tick.posis <- seq(10, length(years), by = 100)
+    axis(1, at = tick.posis, las = 2, labels = years[tick.posis])
+}
+```
+```{r}
+plot(EuStockMarkets)
+```
+```{r}
+library(plotly)
+library(tidyr)
+library(dplyr)
+stocks <- as.data.frame(EuStockMarkets) %>%
+  gather(index, price) %>%
+  mutate(time = rep(time(EuStockMarkets), 4))
+plot_ly(stocks, x = ~time, y = ~price, color = ~index, mode = "lines")
+```
+
+```{r}
+ftse=(EuStockMarkets[,4])
+plot(ftse)
+components.ts = decompose(ftse)
+plot(components.ts)
+fit_ftse <- auto.arima(ftse, trace=TRUE)
+forecaste_ftse <- forecast(fit_ftse, 150)
+plot(forecaste_ftse, main = "Graph with forecasting of ftse",col.main = "darkgreen") 
+
+```
+```{r}
+print(forecaste_ftse)
+```
+
+```{r}
+smi=(EuStockMarkets[,2])
+plot(smi)
+components.ts = decompose(smi)
+plot(components.ts)
+fit_smi <- auto.arima(smi, trace=TRUE)
+forecaste_smi <- forecast(fit_smi, 150)
+plot(forecaste_smi, main = "Graph with forecasting of smi",col.main = "darkgreen") 
+```
+
+```{r}
+print(forecaste_smi)
+```
+```{r}
+
+```
+
+
+```{r}
+dax=(EuStockMarkets[,1])
+plot(dax)
+components.ts = decompose(dax)
+plot(components.ts)
+fit_dax <- auto.arima(dax, trace=TRUE)
+forecaste_dax <- forecast(fit_dax, 150)
+plot(forecaste_dax, main = "Graph with forecasting of dax",col.main = "darkgreen") 
+```
+
+```{r}
+print(forecaste_dax)
+```
+
+```{r}
+#library(prophet)
+```
+
+
+```{r}
+#stocks <- as.data.frame(EuStockMarkets[,4])
+#summary(stocks)
+#pro_time <- time(EuStockMarkets[,4])
+#pro_ftse <- EuStockMarkets[,4]
+#head(pro_time)
+```
+
+```{r}
+#df <- data.frame (
+#  ds = as.POSIXct(pro_time, format="%Y-%m-%d", tz="UTC"),
+#  y = pro_ftse
+#)
+#summary(df)
+```
+```{r}
+
+#modpro <- prophet(df)
+#forecaste_pro_ftse <- make_future_dataframe(modpro, 100)
+#plot(forecaste_pro_ftse, main = "Graph with forecasting of ftse",col.main = "darkgreen") 
+```
+
